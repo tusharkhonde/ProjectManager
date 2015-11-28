@@ -1,0 +1,15 @@
+com/sjsu/project/model/Project.class
+com/sjsu/project/dao/impl/ProjectDaoImpl.class
+com/sjsu/project/ProjectManagerApplication.class
+com/sjsu/project/model/User.class
+com/sjsu/project/dao/impl/TaskDaoImpl.class
+com/sjsu/project/dao/ProjectDao.class
+com/sjsu/project/model/Task.class
+com/sjsu/project/controller/HomeController.class
+com/sjsu/project/dao/impl/UserDaoImpl.class
+com/sjsu/project/controller/TaskController.class
+com/sjsu/project/dao/TaskDao.class
+com/sjsu/project/controller/ProjectController.class
+com/sjsu/project/ProjectManagerConfig.class
+com/sjsu/project/controller/UserController.class
+com/sjsu/project/dao/UserDao.class
