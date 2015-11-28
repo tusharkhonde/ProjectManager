@@ -30,10 +30,15 @@ public class TaskController {
     ProjectDao projectDao = (ProjectDao) ctx.getBean("projectDao");
     TaskDao taskDao = (TaskDao) ctx.getBean("taskDao");
 
+    /*
+    Task has five states 1. New, 2. Assigned, 3. Started, 4. Finished, and 5. cancelled
+     */
+
+
     // CREATE task and assign to user and project
     @RequestMapping(value = "/{userId}/{projectId}",method = RequestMethod.POST,produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Set<Task>> createTask(
+    public ResponseEntity createTask(
             @PathVariable(value = "userId") long userId,
             @PathVariable(value = "projectId") long projectId,
             @RequestParam(value="title", required = true) String title,
@@ -41,6 +46,12 @@ public class TaskController {
             @RequestParam(value="state", required = false) String state,
             @RequestParam(value="estimate", required = true) String estimate,
             @RequestParam(value="actual", required = false) String actual) {
+
+        // Task cannot be added after Project Planning state
+        Project myProject = projectDao.getProject(projectId);
+        if (myProject.getState().compareToIgnoreCase("Planning") != 0){
+            return new ResponseEntity<String>("Task cannot be deleted",HttpStatus.BAD_REQUEST);
+        }
 
         if (title == null || "".equalsIgnoreCase(title) || description == null || "".equalsIgnoreCase(description)
                 || estimate == null || "".equalsIgnoreCase(estimate)) {
@@ -60,6 +71,7 @@ public class TaskController {
         return new ResponseEntity<Set<Task>>(taskSet,HttpStatus.OK);
     }
 
+
     // Get Task
     @RequestMapping(value = "/{taskId}",method = RequestMethod.GET,produces = "application/json")
     @ResponseBody
@@ -78,38 +90,65 @@ public class TaskController {
     @ResponseBody
     public ResponseEntity updateTask(@PathVariable(value = "userId") long userId,
                                      @PathVariable(value = "taskId") long taskId,
-                                     @RequestBody Task taskState){
+                                     @RequestBody Task taskState) {
 
         if (taskState == null) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("Task state Required", HttpStatus.BAD_REQUEST);
         }
-
-        User user = userDao.getUser(userId);
         Task task = taskDao.getTask(taskId);
 
-        if(user.getUserid() != task.getAssignee().getUserid()){
-            return new ResponseEntity("User not found",HttpStatus.BAD_REQUEST);
+        // Check if project is in terminal state completed or cancelled
+        if (task.getProject().getState().compareToIgnoreCase("completed") == 0 ||
+                task.getProject().getState().compareToIgnoreCase("cancelled") == 0) {
+            return new ResponseEntity<String>("Task state cannot be changed, project is in terminal state", HttpStatus.BAD_REQUEST);
         }
 
-        if(taskState.getState().compareTo("cancelled") == 0) {
-            long id = task.getProject().getProjectId();
-            Set<Project> projectSet = user.getProjects();
-            Iterator<Project> iterator = projectSet.iterator();
-            while (iterator.hasNext()) {
-                if (id == iterator.next().getProjectId()) {
-                    task.setState(taskState.getState());
-                    taskDao.updateTask(taskId,task);
-                    return new ResponseEntity(taskDao.getTask(taskId),HttpStatus.OK);
-                }
-                else {
-                    return new ResponseEntity("User not authorized",HttpStatus.BAD_REQUEST);
+        else {
+
+            User user = userDao.getUser(userId);
+            if (user.getUserid() != task.getAssignee().getUserid()) {
+                return new ResponseEntity<String>("User not found", HttpStatus.BAD_REQUEST);
+            }
+
+            if (taskState.getState().compareToIgnoreCase("cancelled") == 0) {
+                long id = task.getProject().getProjectId();
+                Set<Project> projectSet = user.getProjects();
+                Iterator<Project> iterator = projectSet.iterator();
+                while (iterator.hasNext()) {
+                    if (id == iterator.next().getProjectId()) {
+                        task.setState(taskState.getState());
+                        taskDao.updateTask(taskId, task);
+                        return new ResponseEntity<Task>(taskDao.getTask(taskId), HttpStatus.OK);
+                    } else {
+                        return new ResponseEntity<String>("User not authorized", HttpStatus.BAD_REQUEST);
+                    }
                 }
             }
+
+            task.setState(taskState.getState());
+            taskDao.updateTask(taskId, task);
+
+            return new ResponseEntity<Task>(taskDao.getTask(taskId), HttpStatus.OK);
         }
 
-        task.setState(taskState.getState());
-        taskDao.updateTask(taskId,task);
+    }
 
-        return new ResponseEntity(taskDao.getTask(taskId),HttpStatus.OK);
+    // Delete a task from project
+    @RequestMapping(value = "/{taskId}",method = RequestMethod.DELETE,produces = "application/json")
+    @ResponseBody
+    public ResponseEntity deleteTask(@PathVariable(value = "userId") long userId,
+                                     @PathVariable(value = "taskId") long taskId){
+        Task task = taskDao.getTask(taskId);
+        long id = task.getProject().getProjectId();
+        Project myProject = projectDao.getProject(id);
+
+        // Task cannot be deleted after Project planning state
+        if (myProject.getState().compareToIgnoreCase("Planning") != 0){
+            return new ResponseEntity<String>("Task cannot be deleted",HttpStatus.BAD_REQUEST);
+        }
+
+        taskDao.deleteTask(taskId);
+        return new ResponseEntity<String>("Task Deleted",HttpStatus.OK);
+
     }
 }

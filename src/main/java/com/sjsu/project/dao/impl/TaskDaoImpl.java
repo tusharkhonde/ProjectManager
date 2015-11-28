@@ -62,6 +62,9 @@ public class TaskDaoImpl implements TaskDao {
             if (task.getState() != null) {
                 task1.setState(task.getState());
             }
+            if (task.getAssignee()!=null){
+                task1.setAssignee(task.getAssignee());
+            }
             if (task.getActual()!= 0L){
                 task1.setActual(task.getActual());
             }
