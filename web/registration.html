@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<!-- saved from url=(0097)http://demonstration.easy-development.com/jquery-ultimate-fancy-form/foundation/registration.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>Registration - jQuery Ultimate Fancy Form</title>
+ 
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+<script async="" src="./registration_files/cloudflare.min.js"></script><script type="text/javascript">
+//<![CDATA[
+try{if (!window.CloudFlare) {var CloudFlare=[{verbose:0,p:0,byc:0,owlid:"cf",bag2:1,mirage2:0,oracle:0,paths:{cloudflare:"/cdn-cgi/nexp/dok3v=1613a3a185/"},atok:"966e2a26fb66a9459668db589a096c86",petok:"877c4076ccd577925ead2421f3cc0dc224d34db9-1448403791-1800",zone:"easy-development.com",rocket:"0",apps:{"abetterbrowser":{"ie":"7"}},sha2test:0}];!function(a,b){a=document.createElement("script"),b=document.getElementsByTagName("script")[0],a.async=!0,a.src="//ajax.cloudflare.com/cdn-cgi/nexp/dok3v=6f4db11806/cloudflare.min.js",b.parentNode.insertBefore(a,b)}()}}catch(e){};
+//]]>
+</script>
+<script src="./registration_files/jquery.js"></script><style type="text/css"></style>
+<link href="./registration_files/animate.css" rel="stylesheet" type="text/css">
+<script src="./registration_files/jquery-ultimate-fancy-form.min.js"></script>
+<link href="./registration_files/jquery-ultimate-fancy-form.css" rel="stylesheet" type="text/css">
+<link href="./registration_files/normalize.css" rel="stylesheet" type="text/css">
+<link href="./registration_files/foundation.min.css" rel="stylesheet" type="text/css">
+<script src="./registration_files/foundation.min.js"></script><meta class="foundation-data-attribute-namespace"><meta class="foundation-mq-xxlarge"><meta class="foundation-mq-xlarge"><meta class="foundation-mq-large"><meta class="foundation-mq-medium"><meta class="foundation-mq-small"><style></style>
+<link href="./registration_files/foundation.css" rel="stylesheet" type="text/css">
+<script src="./registration_files/foundation.alert-box warning.js"></script>
+<script src="./registration_files/foundation.js"></script><style></style>
+<script src="./registration_files/foundation.dropdown.js"></script>
+<link href="./registration_files/custom.css" rel="stylesheet" type="text/css">
+<style type="text/css">.cf-hidden { display: none; } .cf-invisible { visibility: hidden; }</style></head>
+<body>
+<div class="container row">
+<div class="nav-control">
+<ul>
+<li><a class="active" href="./registration_files/registration.html">Classic</a></li>
+<li><a href="http://demonstration.easy-development.com/jquery-ultimate-fancy-form/foundation/registration-sliding.html">Sliding</a></li>
+</ul>
+<div class="clear"></div>
+</div>
+<div class="form-container large-12">
+<form class="form form-horizontal component-uff p15 dispatched" onkeypress="return event.keyCode != 13;" role="form">
+<h3 class="text-center title">Registration</h3>
+<div>
+<div class="columns large-8 p0">
+<div data-step="" data-step-number="0">
+<h4 data-sb="fadeInLeft" class="sub-title sb-effect-displayed animated fadeInLeft" style="opacity: 1;">Personal Information</h4>
+<div class="form-group">
+<label class="columns large-2 control-label sb-effect-displayed animated fadeInRight" data-sb="fadeInRight" style="opacity: 1;">First Name</label>
+<div class="columns large-10">
+<input data-sb="fadeInLeft" type="text" class="form-control sb-effect-displayed animated fadeInLeft" data-validation-required="#first_name_error_required" name="first_name" style="opacity: 1;">
+<div class="clear"></div>
+<div id="first_name_error_required" class="alert-box warning warning-danger" style="display: none;">
+First Name is required
+</div>
+</div>
+</div>
+<div class="form-group">
+<label class="columns large-2 control-label sb-effect-displayed animated fadeInRight" data-sb="fadeInRight" style="opacity: 1;">Last Name</label>
+<div class="columns large-10">
+<input data-sb="fadeInLeft" type="text" class="form-control sb-effect-displayed animated fadeInLeft" data-validation-required="#last_name_error_required" name="last_name" style="opacity: 1;">
+<div class="clear"></div>
+<div id="last_name_error_required" class="alert-box warning warning-danger" style="display: none;">
+Last Name is required
+</div>
+</div>
+</div>
+<div class="form-group">
+<label class="columns large-2 control-label sb-effect-displayed animated fadeInRight" data-sb="fadeInRight" style="opacity: 1;">Sex</label>
+<div class="columns large-10">
+<select name="sex" data-sb="fadeInLeft" class="form-control sb-effect-displayed animated fadeInLeft" style="opacity: 1;">
+<option value="1">Personal</option>
+<option value="2">Female</option>
+<option value="3">Male</option>
+</select>
+</div>
+</div>
+<div class="form-group">
+<label class="columns large-2 control-label sb-effect-displayed animated fadeInRight" data-sb="fadeInRight" style="opacity: 1;">Profession</label>
+<div class="columns large-10">
+<select name="profession" class="form-control sb-effect-displayed animated fadeInLeft" data-sb="fadeInLeft" style="opacity: 1;">
+<option value="1">Programmer</option>
+<option value="2">Front End Developer</option>
+<option value="3">jQuery Fan</option>
+<option value="4">Not Sure</option>
+</select>
+</div>
+</div>
+<ul class="pager">
+<li class="right columns large-12 sb-effect-displayed animated bounceInLeft" data-sb="bounceInLeft" style="opacity: 1;"><a class="next small radius success button columns small-3 fr" data-step-next="">Next »</a></li>
+</ul>
+<div class="clear"></div>
+</div>
+<div data-step="" data-step-number="1" style="display: none;">
+<h4 data-sb="fadeInLeft" class="sub-title">Account Information</h4>
+<div class="form-group">
+<label class="columns large-2 control-label" data-sb="rollIn">Email Address</label>
+<div class="columns large-10">
+<input data-sb="bounceInLeft" type="text" class="form-control" data-validation-required="#email_error_required" data-validation-email="#email_error_invalid" name="email">
+<div class="clear"></div>
+<div id="email_error_required" class="alert-box warning warning-danger">
+Email is required
+</div>
+<div id="email_error_invalid" class="alert-box warning warning-danger">
+Email is invalid
+</div>
+</div>
+</div>
+<div class="form-group">
+<label class="columns large-2 control-label" data-sb="rollIn">Password</label>
+<div class="columns large-10">
+<input data-sb="bounceInLeft" type="password" class="form-control" data-validation-required="#password_error_required" name="password">
+<div class="clear"></div>
+<div id="password_error_required" class="alert-box warning warning-danger">
+Password is required
+</div>
+</div>
+</div>
+<ul class="pager">
+<li class="left columns large-5" data-sb="bounceInLeft"><a class="prev small radius success button columns small-3 fl" data-step-previous="">« Previous</a></li>
+<li class="right columns large-5" data-sb="bounceInLeft"><a class="next small radius success button columns small-3 fr" data-step-finish="" style="display: none;">Finish »</a></li>
+</ul>
+<div class="clear"></div>
+</div>
+</div>
+<div class="columns large-4">
+<h4 class="text-center sub-title">Your Profile</h4>
+<div class="cascading-container">
+<div data-step-mirror-cascading="" style="display: block;">
+<hr>
+<h5>Personal Information</h5>
+<hr>
+<p>First Name : <span data-input-mirror="[name=&quot;first_name&quot;]"></span></p>
+<p>Last Name : <span data-input-mirror="[name=&quot;last_name&quot;]"></span></p>
+<p>Sex : <span data-input-mirror="[name=&quot;sex&quot;]">Personal</span></p>
+<p>Profession : <span data-input-mirror="[name=&quot;profession&quot;]">Programmer</span></p>
+</div>
+<div data-step-mirror-cascading="" style="display: none;">
+<hr>
+<h5>Account Information</h5>
+<hr>
+<p>Email : <span data-input-mirror="[name=&quot;email&quot;]"></span></p>
+<p>Password : <span data-input-mirror="[name=&quot;password&quot;]"></span></p>
+</div>
+</div>
+</div>
+</div>
+<div class="clear"></div>
+</form>
+</div>
+</div>
+
+</body></html>
