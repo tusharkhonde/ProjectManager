@@ -1,0 +1,15 @@
+<html>
+	<body>
+		<h3>Hi ${name}, you have been invited to work on a project!</h3>
+		<p>
+			From - ${email} 
+		</p>
+		<h3>
+			
+		</h3>
+		<p>
+			${message}
+		</p>
+	</body>
+
+</html>

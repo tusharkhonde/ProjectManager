@@ -49,8 +49,8 @@ public class TaskController {
 
         // Task cannot be added after Project Planning state
         Project myProject = projectDao.getProject(projectId);
-        if (myProject.getState().compareToIgnoreCase("Planning") != 0){
-            return new ResponseEntity<String>("Task cannot be deleted",HttpStatus.BAD_REQUEST);
+        if ( !myProject.getState().equalsIgnoreCase("Planning") || !myProject.getState().equalsIgnoreCase("Ongoing")){
+            return new ResponseEntity<String>("Task cannot be added.",HttpStatus.BAD_REQUEST);
         }
 
         if (title == null || "".equalsIgnoreCase(title) || description == null || "".equalsIgnoreCase(description)
@@ -85,6 +85,64 @@ public class TaskController {
     }
 
 
+    // Change assignee of a task OR Assign a task to one user
+    @RequestMapping(value = "/{taskId}/{assigneeId}",method = RequestMethod.PUT,produces = "application/json")
+    @ResponseBody
+    public ResponseEntity changeAssignee(@PathVariable(value = "taskId") long taskId,
+                                     @PathVariable(value = "assigneeId") long assigneeId) {
+
+    	Task task = taskDao.getTask(taskId);
+    	if( null == task )
+    		return new ResponseEntity<String>("Task not found.", HttpStatus.BAD_REQUEST);
+    	
+    	User newUser = userDao.getUser(assigneeId);
+    	if( null == newUser )
+    		return new ResponseEntity<String>("Assignee not found.", HttpStatus.BAD_REQUEST);
+    	
+    	if( null != task.getProject() 
+    			&& ( task.getProject().getState().equalsIgnoreCase("Ongoing") || task.getProject().getState().equalsIgnoreCase("planning")  )
+    			&&  !task.getState().equalsIgnoreCase("finished") 
+    			&&  !task.getState().equalsIgnoreCase("cancelled") 
+    			){
+    		task.setAssignee( newUser );
+    		if( task.getState().equalsIgnoreCase("new") )
+    			task.setState("assigned");
+    		taskDao.updateTask(taskId, task);
+    	}else
+    		return new ResponseEntity<String>("Assignee cannot be changed as Project is not on going.", HttpStatus.BAD_REQUEST);
+    	
+    	return new ResponseEntity<Task>(taskDao.getTask(taskId), HttpStatus.OK);
+    }	
+    
+    // Update task state - only by assignee
+    @RequestMapping(value = "/{taskId}/{userId}",method = RequestMethod.PUT,produces = "application/json")
+    @ResponseBody
+    public ResponseEntity updateTaskByAssignee(@PathVariable(value = "userId") long userId,
+                                     @PathVariable(value = "taskId") long taskId,
+                                     @RequestParam(value="actual", required = false) Long actual) {
+    	
+    	Task task = taskDao.getTask(taskId);
+    	if( null == task )
+    		return new ResponseEntity<String>("Task not found.", HttpStatus.BAD_REQUEST);
+    	
+    	User newUser = userDao.getUser(userId);
+    	if( null == newUser )
+    		return new ResponseEntity<String>("Assignee not found.", HttpStatus.BAD_REQUEST);
+    	
+    	if( userId != task.getAssignee().getUserid() )
+    		return new ResponseEntity<String>("Not authorized.", HttpStatus.UNAUTHORIZED);
+    	
+    	if( actual != null && actual != 0 ){
+    		task.setState("finished");
+    		task.setActual(actual);
+    		taskDao.updateTask(taskId, task);
+    	}else{
+    		task.setState("started");
+    		taskDao.updateTask(taskId, task);
+    	}
+    	return new ResponseEntity<Task>(taskDao.getTask(taskId), HttpStatus.OK);
+    	
+    }
     // Update task state
     @RequestMapping(value = "/{userId}/{taskId}",method = RequestMethod.PUT,produces = "application/json")
     @ResponseBody
@@ -96,6 +154,9 @@ public class TaskController {
             return new ResponseEntity<String>("Task state Required", HttpStatus.BAD_REQUEST);
         }
         Task task = taskDao.getTask(taskId);
+        
+        if( null == task )
+        	return new ResponseEntity<String>("Task not found.", HttpStatus.BAD_REQUEST);
 
         // Check if project is in terminal state completed or cancelled
         if (task.getProject().getState().compareToIgnoreCase("completed") == 0 ||
@@ -133,22 +194,31 @@ public class TaskController {
 
     }
 
-    // Delete a task from project
+    // Delete or Cancel a task from project
     @RequestMapping(value = "/{taskId}",method = RequestMethod.DELETE,produces = "application/json")
     @ResponseBody
     public ResponseEntity deleteTask(@PathVariable(value = "userId") long userId,
                                      @PathVariable(value = "taskId") long taskId){
-        Task task = taskDao.getTask(taskId);
+        
+    	Task task = taskDao.getTask(taskId);
+    	if( null == task ){
+    		return new ResponseEntity<String>("Task not found.",HttpStatus.BAD_REQUEST);
+    	}
+    	
         long id = task.getProject().getProjectId();
         Project myProject = projectDao.getProject(id);
 
         // Task cannot be deleted after Project planning state
-        if (myProject.getState().compareToIgnoreCase("Planning") != 0){
-            return new ResponseEntity<String>("Task cannot be deleted",HttpStatus.BAD_REQUEST);
+        if (myProject.getState().equalsIgnoreCase("Planning") ){
+        	taskDao.deleteTask(taskId);
+            return new ResponseEntity<String>("Task Deleted",HttpStatus.OK);
         }
-
-        taskDao.deleteTask(taskId);
-        return new ResponseEntity<String>("Task Deleted",HttpStatus.OK);
-
+        else if (myProject.getState().equalsIgnoreCase("ongoing") && userId == myProject.getOwner().getUserid() ){
+        	task.setState("cancelled");
+        	taskDao.updateTask(taskId, task);
+            return new ResponseEntity<String>("Task cancelled",HttpStatus.OK);
+        }else{
+        	return new ResponseEntity<String>("Task cannot be deleted or cancelled.",HttpStatus.BAD_REQUEST);
+        }
     }
 }

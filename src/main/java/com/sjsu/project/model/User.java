@@ -30,6 +30,10 @@ public class User implements Serializable{
 	@JoinTable(name = "USER_PROJECT", joinColumns = { @JoinColumn(name = "userid") }, inverseJoinColumns = { @JoinColumn(name = "projectid") })
 	private Set<Project> projects = new HashSet<Project>();
 
+	
+	
+	// Getter - setter
+	
 	public Set<Project> getProjects() {
 		return this.projects;
 	}

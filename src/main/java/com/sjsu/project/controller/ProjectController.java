@@ -3,9 +3,11 @@ package com.sjsu.project.controller;
 import com.sjsu.project.dao.ProjectDao;
 import com.sjsu.project.dao.TaskDao;
 import com.sjsu.project.dao.UserDao;
+import com.sjsu.project.mail.agent.GoogleMailAgent;
 import com.sjsu.project.model.Project;
 import com.sjsu.project.model.Task;
 import com.sjsu.project.model.User;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -52,8 +54,11 @@ public class ProjectController {
 
 
         Project project = new Project(title, description, "Planning");
-        userDao.addProjects(userId, project);
         User user1 = userDao.getUser(userId);
+        project.setOwner(user1);
+        
+        userDao.addProjects(userId, project);
+        
         Set<Project> projectSet1 = user1.getProjects();
         return new ResponseEntity<Set<Project>>(projectSet1, HttpStatus.OK);
     }
@@ -78,10 +83,20 @@ public class ProjectController {
     public ResponseEntity addUsersToProject(@PathVariable(value = "projectId") long projectId,
                                             @PathVariable(value = "userId") long userId) {
 
-        projectDao.addUsers(projectId, userId);
-        Project project = projectDao.getProject(projectId);
-        Set<User> users = project.getUsers();
-        return new ResponseEntity<Set<User>>(users, HttpStatus.OK);
+        User user = userDao.getUser(userId);
+        Set<User> users = null;
+        if( null != user ){
+        	projectDao.addUsers(projectId, userId);
+        	
+        	// TODO - check for successful addition
+        	GoogleMailAgent agent = new GoogleMailAgent();
+        	agent.sendInvitationMail(user.getName(), user.getEmail(), null, null);
+        	
+            Project project = projectDao.getProject(projectId);
+            if( null != project )
+            	users = project.getUsers();
+        }
+    	return new ResponseEntity<Set<User>>(users, HttpStatus.OK);
     }
 
     // Start project (change state to ongoing) or change state of project

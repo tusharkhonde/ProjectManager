@@ -1,6 +1,7 @@
 package com.sjsu.project.model;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,6 +17,11 @@ public class Project implements Serializable{
     @Column(name="projectid")
     private long projectId;
 
+    // one to one userid
+    @OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "userid")
+    private User owner;
+    
     @Column(name="title")
     private String title;
 
@@ -89,5 +95,13 @@ public class Project implements Serializable{
 		this.title = title;
 		this.desc = desc;
 		this.state = state;
+	}
+
+	public User getOwner() {
+		return owner;
+	}
+
+	public void setOwner(User owner) {
+		this.owner = owner;
 	}
 }

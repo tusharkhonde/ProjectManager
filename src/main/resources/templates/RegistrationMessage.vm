@@ -1,0 +1,12 @@
+<html>
+	<body>
+		<h3>Hi ${name}, Welcome to Project Manager app !</h3>
+		
+		<p>
+			Please use below link to login to the application.
+			<a href=""></a> 
+		
+		</p>
+	</body>
+
+</html>

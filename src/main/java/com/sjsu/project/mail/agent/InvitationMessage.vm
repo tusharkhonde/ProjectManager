@@ -1,0 +1,15 @@
+<html>
+	<body>
+		<h3>Hi ${name}, you have been invited to work on a project!</h3>
+		
+		<h3>
+			
+		</h3>
+		<p>
+			Please use below link to accept the invitation.
+			<a href=""></a> 
+		
+		</p>
+	</body>
+
+</html>
